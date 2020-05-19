@@ -17,7 +17,7 @@ Welcome to the repository containing a 2048 game made using python.
     - Download the 2048.py file from the repository
     - Copy the file to a desired location
     - Navigate to the location in command prompt
-    - Type in the keywords 'python 2048.py' and press enter to run the file
+    - Type in the keywords `python 2048.py` and press enter to run the file
 
 - What are the coustomizations available in the game?
     - You get to choose the size of the grid in which you would like to play the game. The size varies from 2 x 2 to 10 x 10 grid.
