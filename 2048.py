@@ -31,7 +31,9 @@ def game_initialize():
 def print_board(game_board, game_size):
 	for i in range(game_size):
 		for j in range(game_size):
-			print(game_board[i][j], "  ", end='')
+#			print(game_board[i][j], "  ", end='')
+			print("{0:^8}".format(game_board[i][j]), end = '')
+		print()
 		print()
 	print()
 
@@ -144,7 +146,7 @@ def move_by_usr_left(game_board, game_size):
 						if game_board[i][k] == game_board[i][j]:
 							game_board[i][k] *= 2
 							game_board[i][j], k, j = 0, 0, k + 1
-						elif game_board[j][k] != game_board[i][j]:
+						elif game_board[i][k] != game_board[i][j]:
 							if k + 1 == j:
 								k, j = 0, k + 1
 							else:
