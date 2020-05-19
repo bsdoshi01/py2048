@@ -3,10 +3,28 @@
 import random
 import readchar
 import copy
+from os import system, name
+
+def clear():
+	if name == "nt":
+		_ = system('cls')
 
 def game_initialize():
-	game_size = int(input("Enter the size of the grid you would like to use in the game: "))
-	game_limit = int(input("Enter the value at which you want to win the game in the above grid: "))
+	get_correct_game_initialize = False
+	while not get_correct_game_initialize:
+		game_size = int(input("Enter the size of the grid you would like to use in the game: ").strip())
+		if game_size >= 2 and game_size <= 10:
+			get_correct_game_initialize = True
+		else:
+			print("Please enter correct grid size from 2 to 10")
+	get_correct_game_initialize = False
+	correct_game_size = [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
+	while not get_correct_game_initialize:
+		game_limit = int(input("Enter the value at which you want to win the game in the above grid: ").strip())
+		if game_limit in correct_game_size:
+			get_correct_game_initialize = True
+		else:
+			print("Please enter correct winning limit which is a power of two from 4 to 131072")
 	game_board = [list([0] * game_size) for i in range(game_size)]
 	return game_size, game_limit, game_board
 
@@ -167,25 +185,30 @@ def game_over(game_board, game_size):
 	print("Thank you for playing")
 	exit()
 
+def check_win(game_board, game_size, game_limit):
+	for i in range(game_size):
+		for j in range(game_size):
+			if game_board[i][j] == game_limit:
+				print("Hurray!!! You have won the game.")
+				print("Thank You for playing")
+				exit()
+
 
 if __name__ == "__main__":	
+	clear()
 	game_size, game_limit, game_board = game_initialize()
 	game_board = board_initialize(game_board, game_size)
-	print_board(game_board, game_size)
-
-	list_of_zeros_i, list_of_zeros_j = check_zeros(game_board, game_size)
-	game_board = add_zero_after_move(game_board, game_size, list_of_zeros_i, list_of_zeros_j)
-	print_board(game_board, game_size)
-
 	game_over = False
 	while not game_over:
+		list_of_zeros_i, list_of_zeros_j = check_zeros(game_board, game_size)
+		add_zero_after_move(game_board, game_size, list_of_zeros_i, list_of_zeros_j)	
+		print_board(game_board, game_size)
+		check_win(game_board, game_size, game_limit)
 		flag = False
 		while not flag:
 			usr_input = get_user_input()
 			game_board, flag = check_valid_move(game_board, game_size, usr_input)
-		list_of_zeros_i, list_of_zeros_j = check_zeros(game_board, game_size)
-		add_zero_after_move(game_board, game_size, list_of_zeros_i, list_of_zeros_j)	
-		print_board(game_board, game_size)
+		clear()
 
 	if game_over:
 		game_over(game_board, game_size)
