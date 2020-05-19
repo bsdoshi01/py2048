@@ -2,6 +2,7 @@
 
 import random
 import readchar
+import copy
 
 def game_initialize():
 	game_size = int(input("Enter the size of the grid you would like to use in the game: "))
@@ -38,31 +39,34 @@ def check_zeros(game_board, game_size):
 def add_zero_after_move(game_board, game_size, list_of_zeros_i, list_of_zeros_j):
 	num_of_possible_zeros = len(list_of_zeros_i)
 	if num_of_possible_zeros == 0:
-		game_board(game_board, game_size)
+		game_over(game_board, game_size)
 	location_of_random_zero = random.randint(1, num_of_possible_zeros) - 1
 	game_board[list_of_zeros_i[location_of_random_zero]][list_of_zeros_j[location_of_random_zero]] = 2
 	return game_board
 
 def check_valid_move(game_board, game_size, usr_input):
 	flag = True
+	game_board_old = copy.deepcopy(game_board)
 	if usr_input == 'w':
-		game_board_new = move_by_usr_up(game_board, game_size)
-		if game_board_new == game_board:
+		game_board = move_by_usr_up(game_board, game_size)
+		if game_board_old == game_board:
 			flag = False
 	elif usr_input == 's':
-		game_board_new = move_by_usr_down(game_board, game_size)
-		if game_board_new == game_board:
+		game_board = move_by_usr_down(game_board, game_size)
+		if game_board_old == game_board:
 			flag = False
 	elif usr_input == 'a':
-		game_board_new = move_by_usr_left(game_board, game_size)
-		if game_board_new == game_board:
+		game_board = move_by_usr_left(game_board, game_size)
+		if game_board_old == game_board:
 			flag = False
 	elif usr_input == 'd':
-		game_board_new = move_by_usr_right(game_board, game_size)
-		if game_board_new == game_board:
+		game_board = move_by_usr_right(game_board, game_size)
+		if game_board_old == game_board:
 			flag = False
 	else:
 		flag = False
+	if not flag:
+		print("Please enter a valid move")
 	return game_board, flag
 
 def move_by_usr_up(game_board, game_size):
@@ -157,20 +161,12 @@ def move_by_usr_right(game_board, game_size):
 			j -= 1
 	return game_board
 
-''' LOGIC:
-- walk over the array from the first to the last number
-  - for each original number in the array that is not zero
-    - look backwards for a target position that does not contain a zero (unless it is position zero)
-      - if the target position does not contain the original number use the next position
-    - if the target position is different from the original position
-      - add the number to the number on the target position
-      - replace the original number by zero
-'''
-
 def game_over(game_board, game_size):
 	print_board(game_board, game_size)
 	print("This is the final game layout of your gameplay. You are out of spaces to continue playing further.")
 	print("Thank you for playing")
+	exit()
+
 
 if __name__ == "__main__":	
 	game_size, game_limit, game_board = game_initialize()
@@ -183,8 +179,13 @@ if __name__ == "__main__":
 
 	game_over = False
 	while not game_over:
-		usr_input = get_user_input()
-		game_board, flag = check_valid_move(game_board, game_size, usr_input)
+		flag = False
+		while not flag:
+			usr_input = get_user_input()
+			game_board, flag = check_valid_move(game_board, game_size, usr_input)
 		list_of_zeros_i, list_of_zeros_j = check_zeros(game_board, game_size)
 		add_zero_after_move(game_board, game_size, list_of_zeros_i, list_of_zeros_j)	
 		print_board(game_board, game_size)
+
+	if game_over:
+		game_over(game_board, game_size)
